@@ -1,0 +1,40 @@
+{
+    "appId": "Interproscan-5.16.55u2",
+    "archive": false,
+    "archivePath": "/vaughn/analyses/iprscan05-201",
+    "archiveSystem": "data.iplantcollaborative.org",
+    "batchQueue": "development",
+    "inputs": {
+        "query": "agave://data.iplantcollaborative.org/shared/iplantcollaborative/example_data/ebi_interproscan/checktrans.fasta"
+    },
+    "maxRunTime": "00:30:00",
+    "name": "test-small",
+    "nodeCount": 1,
+    "owner": "vaughn",
+    "parameters": {
+        "goterms": true,
+        "pathways": true
+    },
+    "processorsPerNode": 16,
+    "notifications": [{
+		"url": "http://requestbin.agaveapi.co/v0o851v0?job_id=${JOB_ID}&status=${JOB_STATUS}",
+		"event": "*",
+		"persistent": true
+	}, {
+		"url": "vaughn@tacc.utexas.edu",
+		"event": "QUEUED",
+		"persistent": false
+	}, {
+		"url": "vaughn@tacc.utexas.edu",
+		"event": "RUNNING",
+		"persistent": false
+	}, {
+		"url": "vaughn@tacc.utexas.edu",
+		"event": "FINISHED",
+		"persistent": false
+	}, {
+		"url": "vaughn@tacc.utexas.edu",
+		"event": "FAILED",
+		"persistent": false
+	}]
+}

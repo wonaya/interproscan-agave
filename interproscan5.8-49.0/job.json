@@ -1,0 +1,21 @@
+{
+    "appId": "Interproscan-5.8.49.0",
+    "archive": false,
+    "archivePath": "/vaughn/analyses/iprscan05-101",
+    "archiveSystem": "data.iplantcollaborative.org",
+    "batchQueue": "normal",
+    "executionSystem": "stampede-11222014-1455-vaughn",
+    "inputs": {
+        "query": "agave://data.iplantcollaborative.org/shared/iplantcollaborative/example_data/interproscan/Bos_taurus.UMD3.1.pep.all.fa"
+    },
+    "maxRunTime": "48:00:00",
+    "name": "test1",
+    "nodeCount": 8,
+    "outputPath": null,
+    "owner": "vaughn",
+    "parameters": {
+        "goterms": true,
+        "pathways": true
+    },
+    "processorsPerNode": 128
+}

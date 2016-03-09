@@ -1,0 +1,58 @@
+OWD=$PWD
+
+# Unpack bin directory
+tar -zxf bin.tgz
+PATH=${PATH}:${OWD}/bin
+# Deployed in the TACC scratch projects space dedicated to iPlant
+IPRSCAN="/scratch/projects/tacc/bio/interproscan/interproscan-5.8-49.0"
+PATH=${PATH}:${IPRSCAN}:${IPRSCAN}/bin
+
+# Hard coded
+RECORDS=1000
+SPLIT="split_fasta"
+OUTDIR="output"
+PARAM="paramlist"
+
+# query is a X-multifasta
+
+# args
+ARGS="--tempdir /tmp --formats tsv,gff3,xml --iprlookup ${goterms} ${pathways}"
+
+mkdir -p ${OUTDIR}
+mkdir -p ${SPLIT}
+splitfasta.pl -f "${query}" -o ${SPLIT} -s "seqfile" -r ${RECORDS}
+
+rm -rf "${PARAM}"
+for C in `find ${SPLIT} -size +0c -type f`
+do
+echo "time ${IPRSCAN}/interproscan.sh ${ARGS} --output-dir ${OUTDIR} --input $C " >> "${PARAM}"
+done
+
+export TACC_LAUNCHER_PPN=2
+export EXECUTABLE=$TACC_LAUNCHER_DIR/init_launcher
+export WORKDIR=.
+export CONTROL_FILE=paramlist
+export TACC_LAUNCHER_SCHED=interleaved
+time $TACC_LAUNCHER_DIR/paramrun SLURM $EXECUTABLE $WORKDIR $CONTROL_FILE
+
+# Consolidate results
+rm -rf "${MFA_FILE}.reordered ${MFA_FILE}.tsv ${MFA_FILE}.gff3"
+# Create XML file
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > "$OWD/${MFA_FILE}.xml"
+
+for D in `find ${SPLIT} -size +0c -type f`
+do
+BN=$(basename $D)
+
+egrep -v "<\?xml" "${OUTDIR}/${BN}.xml" >> "$OWD/${query}.xml"
+cat "${OUTDIR}/${BN}.tsv" >> "$OWD/${query}.tsv"
+cat "${OUTDIR}/${BN}.gff3" >> "$OWD/${query}.gff3"
+cat "${SPLIT}/${BN}" >> "$OWD/${query}.reordered"
+
+done
+
+# Clean up
+for E in bin.tgz bin ${OUTDIR} ${MFA_FILE} ${SPLIT}
+do
+  rm -rf $E
+done
