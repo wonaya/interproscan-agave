@@ -1,7 +1,6 @@
-Overview
-########
+#Overview
 
-InterproScan for Agave
+##InterproScan for Agave
 
 This is the Agave app bundle and description for a locally-hosted InterproScan. It uses TACC's Parametric Launcher to massively parallelize InterproScan analysis. 
 
